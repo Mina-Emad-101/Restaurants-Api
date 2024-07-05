@@ -6,7 +6,6 @@ use App\Models\Cuisine;
 use App\Models\Location;
 use App\Models\Restaurant;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class RestaurantSeeder extends Seeder
 {
@@ -58,7 +57,8 @@ class RestaurantSeeder extends Seeder
         // Seed Restaurants Table
         foreach ($data as $value) {
             $restaurant = new Restaurant;
-            $restaurant->location_id = Location::where('name', $value['Location'])->get()[0]->id;
+            $restaurant->location()->associate(Location::where('name', $value['Location'])->first());
+            // Location::where('name', $value['Location'])->first()->restaurant()->associate($restaurant);
             $restaurant->url = $value['Url'];
             $restaurant->name = $value['Name'];
             $restaurant->address = $value['Address'];
@@ -69,8 +69,8 @@ class RestaurantSeeder extends Seeder
 
         // Seed Cuisine_Restaurant Table
         foreach ($cuisine_restaurant as $value) {
-            $pivot = [Restaurant::where('name', $value['restaurant'])->get()[0]->id, Cuisine::where('name', $value['cuisine'])->get()[0]->id];
-            DB::insert('insert into cuisine_restaurant (restaurant_id, cuisine_id) values (?, ?)', [$pivot[0], $pivot[1]]);
+            $pivot = [Restaurant::where('name', $value['restaurant'])->first(), Cuisine::where('name', $value['cuisine'])->first()];
+            $pivot[0]->cuisines()->attach($pivot[1]->id);
         }
     }
 }

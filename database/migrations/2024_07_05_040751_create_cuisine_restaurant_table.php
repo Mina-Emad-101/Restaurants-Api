@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignIdFor(Cuisine::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Restaurant::class)->constrained()->cascadeOnDelete();
             $table->index(['cuisine_id', 'restaurant_id']);
-            $table->timestamps();
         });
     }
 

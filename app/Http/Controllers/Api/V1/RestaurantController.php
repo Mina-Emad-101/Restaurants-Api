@@ -15,7 +15,8 @@ class RestaurantController extends Controller
      */
     public function index(): Collection
     {
-        return Restaurant::all();
+        return Restaurant::with(['location', 'cuisines'])->take(10)->get();
+        // return Restaurant::take(10)->get();
     }
 
     /**
