@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\CuisineCollection;
+use App\Http\Resources\V1\CuisineResource;
 use App\Models\Cuisine;
 use Illuminate\Http\Request;
 
@@ -13,7 +15,7 @@ class CuisineController extends Controller
      */
     public function index()
     {
-        return Cuisine::all();
+        return new CuisineCollection(Cuisine::all());
     }
 
     /**
@@ -29,7 +31,7 @@ class CuisineController extends Controller
      */
     public function show(Cuisine $cuisine)
     {
-        return $cuisine;
+        return new CuisineResource($cuisine);
     }
 
     /**

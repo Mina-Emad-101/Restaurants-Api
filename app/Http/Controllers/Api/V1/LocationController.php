@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\LocationCollection;
+use App\Http\Resources\V1\LocationResource;
 use App\Models\Location;
 use Illuminate\Http\Request;
 
@@ -13,7 +15,7 @@ class LocationController extends Controller
      */
     public function index()
     {
-        return Location::all();
+        return new LocationCollection(Location::all());
     }
 
     /**
@@ -29,7 +31,7 @@ class LocationController extends Controller
      */
     public function show(Location $location)
     {
-        return $location;
+        return new LocationResource($location);
     }
 
     /**
