@@ -25,7 +25,9 @@ class RestaurantController extends Controller
             return new RestaurantCollection(Restaurant::with(['location', 'cuisines'])->paginate(10));
         }
 
-        return new RestaurantCollection(Restaurant::with(['location', 'cuisines'])->where($queries)->paginate(10));
+        $restaurants = Restaurant::with(['location', 'cuisines'])->where($queries)->paginate(10);
+
+        return new RestaurantCollection($restaurants->appends($request->query()));
     }
 
     /**
