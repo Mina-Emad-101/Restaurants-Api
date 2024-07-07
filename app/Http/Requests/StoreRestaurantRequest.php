@@ -26,8 +26,8 @@ class StoreRestaurantRequest extends FormRequest
             'name' => ['required'],
             'location' => ['required'],
             'address' => ['required'],
-            'number' => ['required'],
-            'cuisines' => ['required'],
+            'number' => [],
+            'cuisines' => [],
             // 'timings' => ['required'],
         ];
     }

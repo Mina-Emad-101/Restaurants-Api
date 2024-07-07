@@ -10,6 +10,10 @@ class Location extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+    ];
+
     public function restaurant(): HasMany
     {
         return $this->hasMany(Restaurant::class);

@@ -9,6 +9,8 @@ use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantRequest;
 use App\Http\Resources\V1\RestaurantCollection;
 use App\Http\Resources\V1\RestaurantResource;
+use App\Models\Cuisine;
+use App\Models\Location;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 
@@ -39,7 +41,27 @@ class RestaurantController extends Controller
     {
         $values = $request->all();
 
-        return new RestaurantResource(Restaurant::create($values));
+        $values = array_map('trim', $values);
+
+        $location = Location::firstOrCreate(['name' => ucwords($values['location'])]);
+
+        $restaurant = new Restaurant;
+        $restaurant->url = $values['url'];
+        $restaurant->name = ucwords($values['name']);
+        $restaurant->location()->associate($location);
+        $restaurant->address = ucwords($values['address']);
+        $restaurant->number = $values['number'];
+        $restaurant->save();
+
+        $cuisines = explode(',', $values['cuisines']);
+        $cuisines = array_map('trim', $cuisines);
+        foreach ($cuisines as $value) {
+            $cuisine = Cuisine::firstOrCreate(['name' => ucwords($value)]);
+
+            $restaurant->cuisines()->attach($cuisine->id);
+        }
+
+        return new RestaurantResource($restaurant->load('cuisines'));
     }
 
     /**

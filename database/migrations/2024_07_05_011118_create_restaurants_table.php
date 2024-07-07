@@ -15,10 +15,10 @@ return new class extends Migration
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Location::class)->constrained()->cascadeOnDelete();
-            $table->text('url');
-            $table->text('name');
-            $table->text('address');
-            $table->text('number')->nullable(true);
+            $table->string('url');
+            $table->string('name');
+            $table->string('address');
+            $table->string('number')->nullable(true);
             $table->json('timings')->nullable(true);
             $table->timestamps();
         });
