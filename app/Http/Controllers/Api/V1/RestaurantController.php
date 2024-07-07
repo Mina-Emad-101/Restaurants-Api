@@ -43,9 +43,11 @@ class RestaurantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRestaurantRequest $request): void
+    public function store(StoreRestaurantRequest $request): RestaurantResource
     {
-        //
+        $values = $request->all();
+
+        return new RestaurantResource(Restaurant::create($values));
     }
 
     /**
