@@ -11,7 +11,7 @@ class StoreRestaurantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,13 +22,7 @@ class StoreRestaurantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'url' => ['required', 'url'],
-            'name' => ['required'],
-            'location' => ['required'],
-            'address' => ['required'],
-            'number' => ['required'],
-            'cuisines' => ['required'],
-            // 'timings' => ['required'],
+            //
         ];
     }
 }
