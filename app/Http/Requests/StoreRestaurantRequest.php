@@ -22,7 +22,7 @@ class StoreRestaurantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'url' => ['required', 'url:https'],
+            'url' => ['required', 'url'],
             'name' => ['required'],
             'location' => ['required'],
             'address' => ['required'],
