@@ -2,9 +2,10 @@
 
 namespace App\Filters\V1;
 
+use App\Filters\Filter;
 use Illuminate\Http\Request;
 
-class RestaurantFilter
+class RestaurantFilter implements Filter
 {
     protected $safeParms = [
         'name' => ['eq'],
@@ -31,7 +32,7 @@ class RestaurantFilter
 
         if (in_array($column, $relationCols)) {
             $model = 'App\\Models\\'.ucwords(explode('_', $column)[0]);
-            $value = $model::where('name', '=', $value)->first()->id;
+            $value = $model::where('name', '=', $value)->firstOrFail()->id;
         }
 
         $query = [$column, $operator, $value];

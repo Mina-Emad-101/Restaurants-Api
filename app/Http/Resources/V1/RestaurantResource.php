@@ -20,8 +20,8 @@ class RestaurantResource extends JsonResource
             'name' => $this->name,
             'address' => $this->address,
             'number' => $this->number,
-            'location' => $this->location,
-            'cuisines' => $this->cuisines,
+            'location' => $this->location->name,
+            'cuisines' => CuisineResource::collection($this->whenLoaded('cuisines')),
         ];
     }
 }

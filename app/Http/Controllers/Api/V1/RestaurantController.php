@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Builders\V1\RestaurantQueryBuilder;
 use App\Filters\V1\RestaurantFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRestaurantRequest;
@@ -18,14 +19,15 @@ class RestaurantController extends Controller
      */
     public function index(Request $request): RestaurantCollection
     {
-        $filter = new RestaurantFilter();
-        $queries = $filter->transform($request);
+        $restaurants = Restaurant::with(['location']);
 
-        if (count($queries) == 0) {
-            return new RestaurantCollection(Restaurant::with(['location', 'cuisines'])->paginate(10));
-        }
+        $filter = new RestaurantFilter;
+        $restaurants = new RestaurantQueryBuilder($restaurants, $request, $filter);
+        $restaurants = $restaurants
+            ->filterByEquality()
+            ->filterByBooleans();
 
-        $restaurants = Restaurant::with(['location', 'cuisines'])->where($queries)->paginate(10);
+        $restaurants = $restaurants->paginate(10);
 
         return new RestaurantCollection($restaurants->appends($request->query()));
     }
@@ -49,8 +51,17 @@ class RestaurantController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Restaurant $restaurant): RestaurantResource
+    public function show(Restaurant $restaurant, Request $request): RestaurantResource
     {
+        $restaurant = $restaurant->with(['location']);
+
+        $filter = new RestaurantFilter;
+        $restaurant = new RestaurantQueryBuilder($restaurant, $request, $filter);
+        $restaurant = $restaurant
+            ->filterByEquality()
+            ->filterByBooleans()
+            ->first();
+
         return new RestaurantResource($restaurant);
     }
 
