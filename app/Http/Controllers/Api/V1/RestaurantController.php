@@ -61,7 +61,9 @@ class RestaurantController extends Controller
             $restaurant->cuisines()->attach($cuisine->id);
         }
 
-        return new RestaurantResource($restaurant->load('cuisines'));
+        $restaurant = $restaurant->load('cuisines');
+
+        return new RestaurantResource($restaurant);
     }
 
     /**
