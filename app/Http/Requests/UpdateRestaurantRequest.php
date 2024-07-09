@@ -11,7 +11,7 @@ class UpdateRestaurantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,28 @@ class UpdateRestaurantRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if ($method === 'PUT') {
+            return [
+                'url' => ['required', 'url'],
+                'name' => ['required'],
+                'location' => ['required'],
+                'address' => ['required'],
+                'number' => [],
+                'cuisines' => [],
+                // 'timings' => ['required'],
+            ];
+        } elseif ($method === 'PATCH') {
+            return [
+                'url' => ['sometimes', 'required', 'url'],
+                'name' => ['sometimes', 'required'],
+                'location' => ['sometimes', 'required'],
+                'address' => ['sometimes', 'required'],
+                'number' => ['sometimes'],
+                'cuisines' => ['sometimes'],
+                // 'timings' => ['sometimes', 'required'],
+            ];
+        }
     }
 }

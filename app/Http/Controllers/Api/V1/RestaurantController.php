@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Builders\V1\RestaurantQueryBuilder;
 use App\Filters\V1\RestaurantFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BulkStoreRestaurantRequest;
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantRequest;
 use App\Http\Resources\V1\RestaurantCollection;
@@ -27,7 +28,8 @@ class RestaurantController extends Controller
         $restaurants = new RestaurantQueryBuilder($restaurants, $request, $filter);
         $restaurants = $restaurants
             ->filterByEquality()
-            ->filterByBooleans();
+            ->filterByBooleans()
+            ->end();
 
         $restaurants = $restaurants->paginate(10);
 
@@ -61,9 +63,39 @@ class RestaurantController extends Controller
             $restaurant->cuisines()->attach($cuisine->id);
         }
 
-        $restaurant = $restaurant->load('cuisines');
+        $restaurant = $restaurant->loadMissing('cuisines');
 
         return new RestaurantResource($restaurant);
+    }
+
+    /**
+     * Store Bulk Data
+     */
+    public function bulkStore(BulkStoreRestaurantRequest $request): void
+    {
+        $all_data = $request->get('data');
+
+        foreach ($all_data as $data) {
+            $data = array_map('trim', $data);
+
+            $location = Location::firstOrCreate(['name' => ucwords($data['location'])]);
+
+            $restaurant = new Restaurant;
+            $restaurant->url = $data['url'];
+            $restaurant->name = ucwords($data['name']);
+            $restaurant->location()->associate($location);
+            $restaurant->address = ucwords($data['address']);
+            $restaurant->number = $data['number'];
+            $restaurant->save();
+
+            $cuisines = explode(',', $data['cuisines']);
+            $cuisines = array_map('trim', $cuisines);
+            foreach ($cuisines as $value) {
+                $cuisine = Cuisine::firstOrCreate(['name' => ucwords($value)]);
+
+                $restaurant->cuisines()->attach($cuisine->id);
+            }
+        }
     }
 
     /**
@@ -71,14 +103,15 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant, Request $request): RestaurantResource
     {
+        $id = $restaurant->id;
         $restaurant = $restaurant->with(['location']);
 
         $filter = new RestaurantFilter;
         $restaurant = new RestaurantQueryBuilder($restaurant, $request, $filter);
         $restaurant = $restaurant
-            ->filterByEquality()
             ->filterByBooleans()
-            ->first();
+            ->end()
+            ->find($id);
 
         return new RestaurantResource($restaurant);
     }
@@ -88,7 +121,37 @@ class RestaurantController extends Controller
      */
     public function update(UpdateRestaurantRequest $request, Restaurant $restaurant): void
     {
-        //
+        $values = $request->all();
+
+        $values = array_map('trim', $values);
+
+        if ($request->has('location')) {
+            $location = Location::firstOrCreate(['name' => ucwords($values['location'])]);
+        }
+
+        $restaurant->url = $request->get('url') ?: $restaurant->url;
+        $restaurant->name = ucwords($request->get('name')) ?: $restaurant->name;
+        if ($request->has('location')) {
+            $restaurant->location()->associate($location);
+        }
+        $restaurant->address = ucwords($request->get('address')) ?: $restaurant->address;
+        $restaurant->number = $request->get('number') ?: $restaurant->number;
+        $restaurant->save();
+
+        if ($request->has('cuisines')) {
+            $cuisines = explode(',', $values['cuisines']);
+            $cuisines = array_map('trim', $cuisines);
+
+            foreach ($restaurant->cuisines as $cuisine) {
+                $restaurant->cuisines()->detach($cuisine->id);
+            }
+
+            foreach ($cuisines as $value) {
+                $cuisine = Cuisine::firstOrCreate(['name' => ucwords($value)]);
+
+                $restaurant->cuisines()->attach($cuisine->id);
+            }
+        }
     }
 
     /**

@@ -12,6 +12,9 @@ Route::get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
     Route::apiResource('restaurants', RestaurantController::class);
+    Route::post('restaurants/bulk', ['uses' => 'RestaurantController@bulkStore']);
+
     Route::apiResource('locations', LocationController::class);
+
     Route::apiResource('cuisines', CuisineController::class);
 });

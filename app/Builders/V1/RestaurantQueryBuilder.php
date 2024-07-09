@@ -3,10 +3,7 @@
 namespace App\Builders\V1;
 
 use App\Filters\Filter;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class RestaurantQueryBuilder
@@ -42,18 +39,8 @@ class RestaurantQueryBuilder
         return $this;
     }
 
-    public function get(): Collection|array
+    public function end(): Builder
     {
-        return $this->builder->get();
-    }
-
-    public function first(): Model|Builder|null
-    {
-        return $this->builder->first();
-    }
-
-    public function paginate(?int $perPage): LengthAwarePaginator
-    {
-        return $this->builder->paginate($perPage);
+        return $this->builder;
     }
 }
