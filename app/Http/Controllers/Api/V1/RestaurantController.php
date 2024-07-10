@@ -30,9 +30,8 @@ class RestaurantController extends Controller
         $restaurants = $restaurants
             ->filterByEquality()
             ->filterByBooleans()
-            ->end();
-
-        $restaurants = $restaurants->paginate(10);
+            ->end()
+            ->paginate(10);
 
         return new RestaurantCollection($restaurants->appends($request->query()));
     }

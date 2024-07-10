@@ -27,6 +27,15 @@ class RestaurantQueryBuilder
 
         $this->builder = $this->builder->where($queries);
 
+        if ($this->request->query('cuisine') && $this->request->query('cuisine')['eq']) {
+            $value = $this->request->query('cuisine')['eq'];
+            $value = trim(ucwords($value));
+
+            $this->builder = $this->builder->whereHas('cuisines', function ($builder) use ($value) {
+                $builder->where('name', $value);
+            })->with('cuisines');
+        }
+
         return $this;
     }
 

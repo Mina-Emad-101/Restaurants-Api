@@ -24,7 +24,7 @@ class RestaurantFilter implements Filter
         'lte' => '<=',
     ];
 
-    protected function addQuery(string $column, string $operator, string $value): array
+    private function addQuery(string $column, string $operator, string $value): array
     {
         $relationCols = [
             'location_id',
