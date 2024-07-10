@@ -6,6 +6,7 @@ use App\Builders\V1\RestaurantQueryBuilder;
 use App\Filters\V1\RestaurantFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BulkStoreRestaurantRequest;
+use App\Http\Requests\DeleteRestaurantRequest;
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantRequest;
 use App\Http\Resources\V1\RestaurantCollection;
@@ -157,8 +158,10 @@ class RestaurantController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Restaurant $restaurant): void
+    public function destroy(DeleteRestaurantRequest $request, Restaurant $restaurant): RestaurantResource
     {
-        //
+        $restaurant->delete();
+
+        return new RestaurantResource($restaurant);
     }
 }

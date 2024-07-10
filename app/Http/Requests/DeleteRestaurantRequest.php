@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BulkStoreRestaurantRequest extends FormRequest
+class DeleteRestaurantRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class BulkStoreRestaurantRequest extends FormRequest
     {
         $user = $this->user();
 
-        return $user && $user->tokenCan('create');
+        return $user && $user->tokenCan('delete');
     }
 
     /**
@@ -24,13 +24,7 @@ class BulkStoreRestaurantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'data.*.url' => ['required', 'url'],
-            'data.*.name' => ['required'],
-            'data.*.location' => ['required'],
-            'data.*.address' => ['required'],
-            'data.*.number' => [],
-            'data.*.cuisines' => [],
-            // 'timings' => ['required'],
+            //
         ];
     }
 }
