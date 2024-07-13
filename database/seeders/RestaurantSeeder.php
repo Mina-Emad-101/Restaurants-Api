@@ -54,16 +54,48 @@ class RestaurantSeeder extends Seeder
             $cuisine->save();
         }
 
+        // Parse Timings to JSON String
+        $fn = function ($value) {
+            $timings = $value['Timings'];
+            if (! $timings) {
+                return null;
+            }
+            $days = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
+            $resultJson = '{';
+
+            for ($i = 0; $i < count(str_split($timings)); $i++) {
+                if ($i < count(str_split($timings)) - 2 && in_array($timings[$i].$timings[$i + 1].$timings[$i + 2], $days)) {
+                    $resultJson .= '"';
+                    $resultJson .= ',';
+                    $resultJson .= '"';
+                    $resultJson .= strtolower($timings[$i].$timings[$i + 1].$timings[$i + 2]);
+                    $resultJson .= '"';
+                    $resultJson .= ':';
+                    $resultJson .= '"';
+                    $i += 3;
+
+                    continue;
+                }
+                $resultJson .= $timings[$i];
+            }
+            $resultJson .= '"';
+            $resultJson .= '}';
+
+            $resultJson = substr($resultJson, 0, 1).substr($resultJson, 3, count(str_split($resultJson)));
+
+            return $resultJson;
+        };
+
         // Seed Restaurants Table
         foreach ($data as $value) {
             $restaurant = new Restaurant;
             $restaurant->location()->associate(Location::where('name', $value['Location'])->first());
-            // Location::where('name', $value['Location'])->first()->restaurant()->associate($restaurant);
             $restaurant->url = $value['Url'];
             $restaurant->name = $value['Name'];
             $restaurant->address = $value['Address'];
             $restaurant->number = $value['Number'];
-            // $restaurant->timings = $value['Timings'];
+            $restaurant->timings = $fn($value);
             $restaurant->save();
         }
 

@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * 
- *
  * @property int $id
  * @property int $location_id
  * @property string $url
@@ -22,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cuisine> $cuisines
  * @property-read int|null $cuisines_count
  * @property-read \App\Models\Location $location
+ *
  * @method static \Database\Factories\RestaurantFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Restaurant newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Restaurant newQuery()
@@ -35,11 +34,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Restaurant whereTimings($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Restaurant whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Restaurant whereUrl($value)
+ *
  * @mixin \Eloquent
  */
 class Restaurant extends Model
 {
     use HasFactory;
+
+    public $days = [
+        'sat',
+        'sun',
+        'mon',
+        'tue',
+        'wed',
+        'thu',
+        'fri',
+    ];
 
     public function location(): BelongsTo
     {

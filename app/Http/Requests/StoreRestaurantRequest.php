@@ -30,7 +30,8 @@ class StoreRestaurantRequest extends FormRequest
             'address' => ['required'],
             'number' => [],
             'cuisines' => [],
-            // 'timings' => ['required'],
+            'timings' => ['array:sat,sun,mon,tue,wed,thu,fri'],
+            'timings.*' => ['required_with:timings', 'regex:/[0-9:]* [ap]m - [0-9:]* [ap]m/i'],
         ];
     }
 }

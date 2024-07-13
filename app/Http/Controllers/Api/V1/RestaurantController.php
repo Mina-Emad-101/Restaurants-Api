@@ -43,7 +43,9 @@ class RestaurantController extends Controller
     {
         $values = $request->all();
 
-        $values = array_map('trim', $values);
+        $values = collect($values)->except(['timings']);
+        $values = $values->map(fn ($str) => trim($str));
+        $values = $values->merge(['timings' => $request->get('timings')]);
 
         $location = Location::firstOrCreate(['name' => ucwords($values['location'])]);
 
@@ -53,6 +55,7 @@ class RestaurantController extends Controller
         $restaurant->location()->associate($location);
         $restaurant->address = ucwords($values['address']);
         $restaurant->number = $values['number'];
+        $restaurant->timings = json_encode($values['timings']);
         $restaurant->save();
 
         $cuisines = explode(',', $values['cuisines']);
@@ -76,7 +79,9 @@ class RestaurantController extends Controller
         $all_data = $request->get('data');
 
         foreach ($all_data as $data) {
-            $data = array_map('trim', $data);
+            $data = collect($data)->except(['timings']);
+            $data = $data->map(fn ($str) => trim($str));
+            $data = $data->merge(['timings' => $request->get('timings')]);
 
             $location = Location::firstOrCreate(['name' => ucwords($data['location'])]);
 
@@ -86,6 +91,7 @@ class RestaurantController extends Controller
             $restaurant->location()->associate($location);
             $restaurant->address = ucwords($data['address']);
             $restaurant->number = $data['number'];
+            $restaurant->timings = $data['timings'];
             $restaurant->save();
 
             $cuisines = explode(',', $data['cuisines']);
@@ -123,7 +129,9 @@ class RestaurantController extends Controller
     {
         $values = $request->all();
 
-        $values = array_map('trim', $values);
+        $values = collect($values)->except(['timings']);
+        $values = $values->map(fn ($str) => trim($str));
+        $values = $values->merge(['timings' => $request->get('timings')]);
 
         if ($request->has('location')) {
             $location = Location::firstOrCreate(['name' => ucwords($values['location'])]);
@@ -136,6 +144,8 @@ class RestaurantController extends Controller
         }
         $restaurant->address = ucwords($request->get('address')) ?: $restaurant->address;
         $restaurant->number = $request->get('number') ?: $restaurant->number;
+        $restaurant->timings = $request->get('timings') ?: $restaurant->timings;
+
         $restaurant->save();
 
         if ($request->has('cuisines')) {

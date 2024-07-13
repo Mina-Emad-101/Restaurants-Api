@@ -30,7 +30,8 @@ class BulkStoreRestaurantRequest extends FormRequest
             'data.*.address' => ['required'],
             'data.*.number' => [],
             'data.*.cuisines' => [],
-            // 'timings' => ['required'],
+            'data.*.timings' => ['array:sat,sun,mon,tue,wed,thu,fri'],
+            'data.*.timings.*' => ['required_with:timings', 'regex:/[0-9:]* [ap]m - [0-9:]* [ap]m/i'],
         ];
     }
 }

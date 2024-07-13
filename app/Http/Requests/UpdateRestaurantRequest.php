@@ -33,7 +33,8 @@ class UpdateRestaurantRequest extends FormRequest
                 'address' => ['required'],
                 'number' => [],
                 'cuisines' => [],
-                // 'timings' => ['required'],
+                'timings' => ['array:sat,sun,mon,tue,wed,thu,fri'],
+                'timings.*' => ['required_with:timings', 'regex:/[0-9:]* [ap]m - [0-9:]* [ap]m/i'],
             ];
         } elseif ($method === 'PATCH') {
             return [
@@ -43,7 +44,8 @@ class UpdateRestaurantRequest extends FormRequest
                 'address' => ['sometimes', 'required'],
                 'number' => ['sometimes'],
                 'cuisines' => ['sometimes'],
-                // 'timings' => ['sometimes', 'required'],
+                'timings' => ['sometimes', 'array:sat,sun,mon,tue,wed,thu,fri'],
+                'timings.*' => ['required_with:timings', 'regex:/[0-9:]* [ap]m - [0-9:]* [ap]m/i'],
             ];
         }
     }
