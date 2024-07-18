@@ -1,7 +1,12 @@
 <?php
 
+<<<<<<< HEAD
 // use Illuminate\Support\Facades\Route;
 //
+=======
+use Illuminate\Support\Facades\Route;
+
+>>>>>>> becb0359b536680438585b50db126865d0a2ee2c
 // Route::get('/setup', function () {
 //     $credentials = [
 //         'email' => 'menamanos@gmail.com',
