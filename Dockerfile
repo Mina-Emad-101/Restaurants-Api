@@ -16,6 +16,5 @@ WORKDIR /app
 COPY composer.json .
 RUN composer install --no-scripts;
 COPY . .
-RUN npm install;
 
 CMD php artisan serve --host 0.0.0.0 --port 80;
