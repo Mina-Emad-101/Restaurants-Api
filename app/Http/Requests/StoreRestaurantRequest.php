@@ -11,9 +11,10 @@ class StoreRestaurantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = $this->user();
-
-        return $user && $user->tokenCan('create');
+        // $user = $this->user();
+        //
+        // return $user && $user->tokenCan('create');
+        return true;
     }
 
     /**
