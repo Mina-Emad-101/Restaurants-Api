@@ -8,7 +8,8 @@ RUN apt update && apt install -y \
     libxml2-dev \
     zip \
     unzip \
-    nodejs;
+    nodejs \
+    npm;
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer;
 RUN docker-php-ext-install pdo_mysql mbstring;
