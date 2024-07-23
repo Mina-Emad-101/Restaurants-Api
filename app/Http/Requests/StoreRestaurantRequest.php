@@ -25,11 +25,11 @@ class StoreRestaurantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'url' => ['required', 'url'],
+            'url' => ['required', 'url', 'unique:restaurants,url'],
             'name' => ['required'],
             'location' => ['required'],
             'address' => ['required'],
-            'number' => [],
+            'number' => ['unique:restaurants,number'],
             'cuisines' => [],
             'timings' => ['array:sat,sun,mon,tue,wed,thu,fri'],
             'timings.*' => ['required_with:timings', 'regex:/[0-9:]* [ap]m - [0-9:]* [ap]m/i'],

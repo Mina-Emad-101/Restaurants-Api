@@ -25,11 +25,11 @@ class BulkStoreRestaurantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'data.*.url' => ['required', 'url'],
+            'data.*.url' => ['required', 'url', 'unique:restaurants,url'],
             'data.*.name' => ['required'],
             'data.*.location' => ['required'],
             'data.*.address' => ['required'],
-            'data.*.number' => [],
+            'data.*.number' => ['unique:restaurants,number'],
             'data.*.cuisines' => [],
             'data.*.timings' => ['array:sat,sun,mon,tue,wed,thu,fri'],
             'data.*.timings.*' => ['required_with:timings', 'regex:/[0-9:]* [ap]m - [0-9:]* [ap]m/i'],
