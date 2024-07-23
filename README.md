@@ -3,7 +3,7 @@
 <br>
 <br>
 
-#### This Project Provides a RESTfull API to interact with Data I Gathered for Restaurants in the UK.
+#### This Project Provides a RESTful API to interact with Data I Gathered for Restaurants in the UK.
 
 #### I created it using PHP and the Laravel Framework.
 
