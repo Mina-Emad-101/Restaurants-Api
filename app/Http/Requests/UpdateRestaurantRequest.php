@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRestaurantRequest extends FormRequest
 {
@@ -26,13 +27,16 @@ class UpdateRestaurantRequest extends FormRequest
     {
         $method = $this->method();
 
+        $split_url = explode('/', $this->path());
+        $id = array_pop($split_url);
+
         if ($method === 'PUT') {
             return [
-                'url' => ['required', 'url', 'unique:restaurants,url'],
+                'url' => ['required', 'url', Rule::unique('restaurants', 'url')->ignore($id)],
                 'name' => ['required'],
                 'location' => ['required'],
                 'address' => ['required'],
-                'number' => ['unique:restaurants,number'],
+                'number' => [Rule::unique('restaurants', 'number')->ignore($id)],
                 'cuisines' => [],
                 'timings' => ['array:sat,sun,mon,tue,wed,thu,fri'],
                 'timings.*' => ['required_with:timings', 'regex:/[0-9:]* [ap]m - [0-9:]* [ap]m/i'],
